@@ -1,6 +1,7 @@
 package com.pluralsight;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,17 +51,22 @@ public class Store {
     }
 
     public static void loadInventory(String fileName, ArrayList<Product> inventory) {
-        // This method should read a CSV file with product information and
-        // populate the inventory ArrayList with Product objects. Each line
-        // of the CSV file contains product information in the following format:
-        //
-        // id,name,price,quantity
-        //
-        // where id is a unique string identifier, name is the product name,
-        // price is a double value representing the price of the product, and
-        // quantity is an integer representing the number of items available
-        // in the inventory.
+        String line;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(fileName));
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                String id = parts[0];
+                String name = parts[1];
+                double price = Double.parseDouble(parts[2]);
+                inventory.add (new Product(id, name, price));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+       
     }
+
 
     public static void displayProducts(ArrayList<Product> inventory, ArrayList<Product> cart, Scanner scanner) {
         // This method should display a list of products from the inventory,
@@ -68,6 +74,10 @@ public class Store {
         // prompt the user to enter the ID of the product they want to add to
         // their cart, and the quantity they want to add. The method should
         // add the selected product and quantity to the cart ArrayList.
+
+        for (Product product: inventory) {
+            System.out.println(product);
+        }
     }
 
     public static void displayCart(ArrayList<Product> cart, Scanner scanner, double totalAmount) {
